@@ -2,15 +2,19 @@ import logging
 from aiogram import executor
 
 import handlers
-from loader import dp, db_bot
+from loader import dp, db_bot, db_learn_interface, my_name_db_conn
+from utils.commands import set_defautl_commands
 
 
 async def on_startup(dispatcher):
     db_bot.open()
-    db_bot.create_default_table()
-    # db_bot.cursor.execute("INSERT INTO users VALUES (1, 'Valentyn', 'Starushok', 'I1nk3r')")
-    # db_bot.conn.commit()
+    
+    db_learn_interface.connect(db_bot)
+    db_learn_interface.create_default_table()
+
+    my_name_db_conn.connect(db_bot)
     logging.info("Db has opened connection")
+    await set_defautl_commands(dispatcher)
 
 async def on_shutdown(dispatcher):
     db_bot.close()

@@ -1,13 +1,9 @@
-import sqlite3
+from .db import BotDB
 
-
-class BotDB:
-    def __init__(self, db_file_name) -> None:
-        self.db_file_name = db_file_name
-    
-    def open(self):
-        self.conn = sqlite3.connect(self.db_file_name)
-        self.cursor = self.conn.cursor()
+class DbLearnInterface:
+    def connect(self, db_base: BotDB):
+        self.cursor = db_base.cursor
+        self.conn = db_base.conn
 
     def get_user_by_id(self, user_id):
         self.cursor.execute("""
@@ -73,6 +69,3 @@ class BotDB:
         return self.conn.commit()
 
 
-    def close(self):
-        if hasattr(self, 'conn'):
-            self.conn.close()
